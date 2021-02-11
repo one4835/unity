@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator InBattle()
     {
-        if (stage % 5 == 0)
+        if (stage % 10 == 0)
         {
             enemyCntD++;
             GameObject instantEnemy = Instantiate(enemies[3], enemyZones[0].position, enemyZones[0].rotation);

@@ -22,5 +22,10 @@ public class Bullet : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if(!isMelee && other.gameObject.tag == "Enemy")
+        {
+            Destroy(gameObject);
+        }
     }
 }

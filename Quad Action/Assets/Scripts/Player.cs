@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    //해야할 일
+    //안드로이드 빌드용으로 키 설정 바꾸기
+    //움직임 멈추는 코드 만들기wwwwasdwasw
     public float speed;
     public GameObject[] weapons;
     public bool[] hasWeapons;
@@ -59,6 +62,54 @@ public class Player : MonoBehaviour
     int equipWeaponIndex = -1;
     float fireDelay;
 
+    /*public void BtnMove(string position)
+    {
+        Debug.Log(position);
+        if (position = "W")
+        {
+            vAxis = 1;
+        }
+        if (position = "A")
+        {
+            hAxis = 1;
+        }
+        if (position = "S")
+        {
+            vAxis = -1;
+        }
+        if (position = "D")
+        {
+            hAxis = -1;
+        }
+    }*/
+
+    public void BtnMoveW(string positionW)
+    {
+        vAxis = 1;
+
+    }
+
+    public void BtnMoveA(string positionA)
+    {
+        hAxis = 1;
+    }
+
+    public void BtnMoveS(string positionS)
+    {
+        vAxis = -1;
+    }
+
+    public void BtnMoveD(string positionD)
+    {
+        hAxis = -1;
+    }
+
+    public void BtnMove0()
+    {
+        vAxis = 0;
+        hAxis = 0;
+        Move();
+    }
     void Awake()
     {
         anim = GetComponentInChildren<Animator>();
@@ -82,6 +133,14 @@ public class Player : MonoBehaviour
         Interation();
     }
 
+    private void InputControlVector()
+    {
+        if (characterController)
+        {
+            characterController.Move(inputDirection);
+        }
+    }
+
     void GetInput()
     {
         hAxis = Input.GetAxisRaw("Horizontal");
@@ -100,6 +159,7 @@ public class Player : MonoBehaviour
     void Move()
     {
         moveVec = new Vector3(-1 * hAxis, 0, -1 * vAxis).normalized;
+
         if (isDodge)
             moveVec = dodgeVec;
         if (isSwap || !isFireReady || isReload || isDead)
@@ -110,6 +170,8 @@ public class Player : MonoBehaviour
 
         anim.SetBool("isRun", moveVec != Vector3.zero);
         anim.SetBool("isWalk", wDown);
+
+        
     }
 
     void Turn()
@@ -186,8 +248,10 @@ public class Player : MonoBehaviour
             return;
         if (ammo == 0)
             return;
+        if (equipWeapon.curAmmo == equipWeapon.maxAmmo)
+            return;
 
-        if(rDown && !isJump && !isDodge &&!isSwap && isFireReady && !isShop && !isDead)
+        if (rDown && !isJump && !isDodge &&!isSwap && isFireReady && !isShop && !isDead)
         {
             anim.SetTrigger("doReload");
             isReload = true;
@@ -198,10 +262,20 @@ public class Player : MonoBehaviour
 
     void ReloadOut()
     {
-        int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
-        equipWeapon.curAmmo =reAmmo;
-        ammo -= reAmmo;
-        isReload = false;
+        if (equipWeapon.curAmmo == 0)
+        {
+            int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
+            equipWeapon.curAmmo = reAmmo;
+            ammo -= reAmmo;
+            isReload = false;
+        }
+        else
+        {
+            int reAmmo = ammo < equipWeapon.maxAmmo - equipWeapon.curAmmo ? ammo : equipWeapon.maxAmmo - equipWeapon.curAmmo;
+            equipWeapon.curAmmo = reAmmo + equipWeapon.curAmmo;
+            ammo -= reAmmo;
+            isReload = false;
+        }
     }
     void Dodge()
     {
