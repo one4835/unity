@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public string[] jellyNameList;
     public int[] jellyJelatineList;
     public int[] jellyGoldList;
+    public int[] numGoldList;
+    public int[] clickGoldList;
 
     public Vector3[] pointList;
 
